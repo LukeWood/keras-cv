@@ -35,18 +35,44 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
         )
 
         # These would match if they were in the area range
-        y_true = np.array([[[0, 0, 10, 10, 1], [5, 5, 10, 10, 1]]]).astype(np.float32)
-        y_pred = np.array([[[0, 0, 10, 10, 1, 1.0], [5, 5, 10, 10, 1, 0.5]]]).astype(
-            np.float32
-        )
+        y_true = [{
+            'boxes': tf.constant([[[0, 0, 10, 10], [5, 5, 10, 10]]], tf.float32),
+            'classes': [[1, 1]],
+        }]
+        y_pred = [{
+            'boxes': tf.constant([[[0, 0, 10, 10], [5, 5, 10, 10]]], tf.float32),
+            'classes': [[1, 1]],
+            'scores': [[1.0, 0.5]]
+        }]
 
         model.compile(metrics=[mean_average_precision])
-
-        # mean_average_precision.update_state(y_true, y_pred)
-
         model.evaluate(y_pred, y_true)
 
         self.assertAllEqual(mean_average_precision.result(), 1.0)
+
+
+    def test_mixed_dtypes(self):
+
+        # These would match if they were in the area range
+        y_true = {
+            'boxes': tf.constant([[[0, 0, 10, 10], [5, 5, 10, 10]]], tf.float64),
+            'classes': [[1, 1]],
+        }
+        y_pred = {
+            'boxes': tf.constant([[[0, 0, 10, 10], [5, 5, 10, 10]]], tf.float32),
+            'classes': [[1, 1]],
+            'scores': [[1.0, 0.5]]
+        }
+
+        metric = COCOMeanAveragePrecision(
+            bounding_box_format="xyxy",
+            iou_thresholds=[0.15],
+            class_ids=[1],
+            max_detections=1,
+        )
+        metric.update_state(y_true, y_pred)
+        self.assertEqual(metric.result(), 1.0)
+
 
     def test_first_buckets_have_no_boxes(self):
         mean_average_precision = COCOMeanAveragePrecision(
@@ -197,7 +223,7 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
         self.assertEqual(mean_average_precision.result(), 0.625)
 
     def test_counting_with_missing_class_present_in_data(self):
-        y_true = tf.constant(
+        y_true = {'boxes': tf.constant(
             [
                 [
                     [0, 0, 100, 100, 15],
@@ -205,12 +231,12 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
                 ]
             ],
             dtype=tf.float64,
-        )
-        y_pred = tf.constant(
+        )}
+        y_pred = {'boxes': tf.constant(
             [[[0, 50, 100, 150, 1, 1.0], [0, 50, 100, 150, 33, 1.0]]], dtype=tf.float32
-        )
+        )}
 
-        y_true = bounding_box.pad_batch_to_shape(y_true, (1, 20, 5))
+        y_true['boxes'] = bounding_box.pad_batch_to_shape(y_true['boxes'], (1, 20, 5))
         metric = COCOMeanAveragePrecision(
             bounding_box_format="xyxy",
             iou_thresholds=[0.15],
@@ -223,10 +249,10 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
         self.assertAllEqual(metric.ground_truths, [0, 2])
 
     def test_bounding_box_counting(self):
-        y_true = tf.constant([[[0, 0, 100, 100, 1]]], dtype=tf.float64)
-        y_pred = tf.constant([[[0, 50, 100, 150, 1, 1.0]]], dtype=tf.float32)
+        y_true = {'boxes':tf.constant([[[0, 0, 100, 100, 1]]], dtype=tf.float64)}
+        y_pred = {'boxes': tf.constant([[[0, 50, 100, 150, 1, 1.0]]], dtype=tf.float32)}
 
-        y_true = bounding_box.pad_batch_to_shape(y_true, (1, 20, 5))
+        y_true['boxes'] = bounding_box.pad_batch_to_shape(y_true['boxes'], (1, 20, 5))
 
         metric = COCOMeanAveragePrecision(
             bounding_box_format="xyxy",
@@ -239,19 +265,6 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
         metric.update_state(y_true, y_pred)
         self.assertEqual(metric.ground_truths, [2])
 
-    def test_mixed_dtypes(self):
-        y_true = tf.constant([[[0, 0, 100, 100, 1]]], dtype=tf.float64)
-        y_pred = tf.constant([[[0, 50, 100, 150, 1, 1.0]]], dtype=tf.float32)
-
-        metric = COCOMeanAveragePrecision(
-            bounding_box_format="xyxy",
-            iou_thresholds=[0.15],
-            class_ids=[1],
-            max_detections=1,
-        )
-        metric.update_state(y_true, y_pred)
-        self.assertEqual(metric.result(), 1.0)
-
     def test_runs_with_confidence_over_1(self):
         mean_average_precision = COCOMeanAveragePrecision(
             bounding_box_format="xyxy",
@@ -262,13 +275,13 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
             recall_thresholds=[0.3, 0.5],
         )
 
-        y_true = tf.ragged.stack(
+        y_true = {'boxes': tf.ragged.stack(
             [
                 tf.constant([[0, 0, 10, 10, 1], [5, 5, 10, 10, 1]], tf.float32),
                 tf.constant([[0, 0, 10, 10, 1]], tf.float32),
             ]
-        )
-        y_pred = tf.ragged.stack(
+        )}
+        y_pred = {'boxes': tf.ragged.stack(
             [
                 tf.constant([[5, 5, 10, 10, 1, 0.9]], tf.float32),
                 # this box is out of the valid confidence range.
@@ -276,6 +289,6 @@ class COCOMeanAveragePrecisionTest(tf.test.TestCase):
                     [[0, 0, 10, 10, 1, 1.0], [5, 5, 10, 10, 1, 1.1]], tf.float32
                 ),
             ]
-        )
+        )}
         mean_average_precision.update_state(y_true, y_pred)
         self.assertEqual(mean_average_precision.result(), 2 / 3)

@@ -151,13 +151,19 @@ class COCOMeanAveragePrecision(tf.keras.metrics.Metric):
             warnings.warn(
                 "sample_weight is not yet supported in keras_cv COCO metrics."
             )
-        y_true = tf.cast(y_true, self.compute_dtype)
-        y_pred = tf.cast(y_pred, self.compute_dtype)
 
-        if isinstance(y_true, tf.RaggedTensor):
-            y_true = y_true.to_tensor(default_value=-1)
-        if isinstance(y_pred, tf.RaggedTensor):
-            y_pred = y_pred.to_tensor(default_value=-1)
+        y_pred['boxes'] = tf.cast(y_pred['boxes'], self.compute_dtype)
+        y_pred['classes'] = tf.cast(y_pred['classes'], self.compute_dtype)
+        y_pred['scores'] = tf.cast(y_pred['scores'], self.compute_dtype)
+
+        y_true['boxes'] = tf.cast(y_true['boxes'], self.compute_dtype)
+        y_true['classes'] = tf.cast(y_true['classes'], self.compute_dtype)
+
+        #
+        # if isinstance(y_true, tf.RaggedTensor):
+        #     y_true['boxes'] = y_true['boxes'].to_tensor(default_value=-1)
+        # if isinstance(y_pred, tf.RaggedTensor):
+        #     y_pred'boxes' = y_pred['boxes'].to_tensor(default_value=-1)
 
         y_true = bounding_box.convert_format(
             y_true,
@@ -175,28 +181,29 @@ class COCOMeanAveragePrecision(tf.keras.metrics.Metric):
         class_ids = tf.constant(self.class_ids, dtype=self.compute_dtype)
         iou_thresholds = tf.constant(self.iou_thresholds, dtype=self.compute_dtype)
 
-        num_images = tf.shape(y_true)[0]
+        num_images = tf.shape(y_true['boxes'])[0]
 
-        y_pred = utils.sort_bounding_boxes(y_pred, axis=bounding_box.XYXY.CONFIDENCE)
+        # sort boxes by confidence
+        y_pred['boxes'] = utils.sort_bounding_boxes(y_pred['boxes'], y_pred['scores'])
 
         ground_truth_boxes_update = tf.zeros_like(self.ground_truths)
         true_positive_buckets_update = tf.zeros_like(self.true_positive_buckets)
         false_positive_buckets_update = tf.zeros_like(self.false_positive_buckets)
 
         for img in tf.range(num_images):
-            ground_truths = utils.filter_out_sentinels(y_true[img])
-            detections = utils.filter_out_sentinels(y_pred[img])
+            ground_truths = utils.get_image(y_true, img)
+            detections = utils.get_image(y_pred, img)
+
+            ground_truths = utils.filter_out_sentinels(y_true)
+            detections = utils.filter_out_sentinels(y_pred)
 
             if self.area_range is not None:
                 ground_truths = utils.filter_boxes_by_area_range(
                     ground_truths, self.area_range[0], self.area_range[1]
                 )
-                detections = utils.filter_boxes_by_area_range(
-                    detections, self.area_range[0], self.area_range[1]
-                )
 
-            if self.max_detections < tf.shape(detections)[0]:
-                detections = detections[: self.max_detections]
+            if self.max_detections < tf.shape(detections['boxes'])[0]:
+                detections['boxes'] = detections['boxes'][: self.max_detections]
 
             true_positives_update = tf.TensorArray(
                 tf.int32, size=self.num_class_ids * self.num_iou_thresholds
@@ -208,15 +215,15 @@ class COCOMeanAveragePrecision(tf.keras.metrics.Metric):
 
             for c_i in tf.range(self.num_class_ids):
                 category_id = class_ids[c_i]
-                ground_truths_by_category = utils.filter_boxes(
-                    ground_truths, value=category_id, axis=bounding_box.XYXY.CLASS
+                ground_truths_by_category = utils.filter_boxes_by_class(
+                    ground_truths['boxes'], ground_truths['classes'], value=category_id
                 )
-                detections_by_category = utils.filter_boxes(
-                    detections, value=category_id, axis=bounding_box.XYXY.CLASS
+                detections_by_category = utils.filter_boxes_by_class(
+                    detections['boxes'], detections['classes'], value=category_id
                 )
                 if self.max_detections < tf.shape(detections_by_category)[0]:
                     detections_by_category = detections_by_category[
-                        : self.max_detections
+                        :self.max_detections
                     ]
 
                 ground_truths_update = ground_truths_update.write(
@@ -231,7 +238,7 @@ class COCOMeanAveragePrecision(tf.keras.metrics.Metric):
                     iou_threshold = iou_thresholds[iou_i]
                     pred_matches = utils.match_boxes(ious, iou_threshold)
 
-                    dt_scores = detections_by_category[:, bounding_box.XYXY.CONFIDENCE]
+                    dt_scores = detections_by_category['score']
 
                     true_positives = pred_matches != -1
                     false_positives = pred_matches == -1

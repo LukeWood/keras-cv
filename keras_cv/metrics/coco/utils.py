@@ -17,11 +17,14 @@ import tensorflow as tf
 from keras_cv import bounding_box
 
 
-def filter_boxes_by_area_range(boxes, min_area, max_area):
-    areas = bounding_box_area(boxes)
+def filter_boxes_by_area_range(bounding_boxes, min_area, max_area):
+    updated_bounding_boxes = bounding_boxes.copy()
+    areas = bounding_box_area(bounding_boxes['boxes'])
     inds = tf.where(tf.math.logical_and(areas >= min_area, areas < max_area))
-    return tf.gather_nd(boxes, inds)
 
+    for key in bounding_boxes:
+        updated_bounding_boxes[key] = tf.gather_nd(bounding_boxes[key], inds)
+    return updated_bounding_boxes
 
 def bounding_box_area(boxes):
     """box_areas returns the area of the provided bounding boxes.
@@ -35,18 +38,18 @@ def bounding_box_area(boxes):
     return tf.math.multiply(w, h)
 
 
-def filter_boxes(boxes, value, axis=4):
+def filter_boxes_by_class(boxes, box_classes, value):
     """filter_boxes is used to select only boxes matching a given class.
-    The most common use case for this is to filter to accept only a specific
-    bounding_box.CLASS.
     Args:
-        boxes: Tensor of bounding boxes in format `[images, bounding_boxes, 6]`
+        boxes: Tensor of bounding boxes in format `[images, bounding_boxes, 4]`
+        box_classes: the Tensor of bounding box classes
         value: Value the specified axis must match
         axis: Integer identifying the axis on which to sort, default 4
     Returns:
-        boxes: A new Tensor of bounding boxes, where boxes[axis]==value
+        boxes: A new Tensor of bounding boxes only containing those of the correct class
     """
-    return tf.gather_nd(boxes, tf.where(boxes[:, axis] == value))
+    inds = tf.where(box_classes == value)
+    return tf.gather_nd(boxes, inds)
 
 
 def to_sentinel_padded_bounding_box_tensor(box_sets):
@@ -63,7 +66,14 @@ def to_sentinel_padded_bounding_box_tensor(box_sets):
     return tf.ragged.stack(box_sets).to_tensor(default_value=-1)
 
 
-def filter_out_sentinels(boxes):
+def get_image(bounding_boxes, image):
+    updated_bounding_boxes = bounding_boxes.copy()
+
+    for key in bounding_boxes:
+        updated_bounding_boxes[key] = bounding_boxes[key][image]
+    return updated_bounding_boxes
+
+def filter_out_sentinels(bounding_boxes):
     """filter_out_sentinels to filter out boxes that were padded on to the prediction
     or ground truth bounding_box tensor to ensure dimensions match.
     Args:
@@ -72,17 +82,19 @@ def filter_out_sentinels(boxes):
     Returns:
         boxes: A new Tensor of bounding boxes, where boxes[axis]!=-1.
     """
-    return tf.gather_nd(boxes, tf.where(boxes[:, bounding_box.XYXY.CLASS] != -1))
+    updated_bounding_boxes = bounding_boxes.copy()
+    areas = bounding_box_area(bounding_boxes['boxes'])
+    inds = tf.where(tf.where(bounding_boxes['classes'] != -1))
 
+    for key in bounding_boxes:
+        updated_bounding_boxes[key] = tf.gather_nd(bounding_boxes[key], inds)
+    return updated_bounding_boxes
 
-def sort_bounding_boxes(boxes, axis=5):
-    """sort_bounding_boxes is used to sort a list of bounding boxes by a given axis.
-
-    The most common use case for this is to sort by bounding_box.XYXY.CONFIDENCE, as
-    this is a part of computing both COCORecall and COCOMeanAveragePrecision.
+def sort_bounding_boxes(boxes, scores):
+    """sort_bounding_boxes is used to sort a list of bounding boxes by the given scores.
     Args:
-        boxes: Tensor of bounding boxes in format `[images, bounding_boxes, 6]`
-        axis: Integer identifying the axis on which to sort, default 5
+        boxes: Tensor of bounding boxes in format `[images, # bounding_boxes, 4]`
+        scores:  Tensor of box scores
     Returns:
         boxes: A new Tensor of Bounding boxes, sorted on an image-wise basis.
     """
@@ -90,7 +102,7 @@ def sort_bounding_boxes(boxes, axis=5):
     boxes_sorted_list = tf.TensorArray(tf.float32, size=num_images, dynamic_size=False)
     for img in tf.range(num_images):
         preds_for_img = boxes[img, :, :]
-        prediction_scores = preds_for_img[:, axis]
+        prediction_scores = scores[img]
         _, idx = tf.math.top_k(prediction_scores, tf.shape(preds_for_img)[0])
         boxes_sorted_list = boxes_sorted_list.write(
             img, tf.gather(preds_for_img, idx, axis=0)
