@@ -271,7 +271,7 @@ class RetinaNetTest(tf.test.TestCase):
     def test_fit_coco_metrics(self):
         bounding_box_format = "xywh"
         retina_net = keras_cv.models.RetinaNet(
-            classes=1,
+            classes=2,
             bounding_box_format=bounding_box_format,
             backbone="resnet50",
             backbone_weights=None,
@@ -280,19 +280,19 @@ class RetinaNetTest(tf.test.TestCase):
         )
 
         retina_net.compile(
-            optimizer=optimizers.Adam(),
+            optimizer=optimizers.SGD(learning_rate=0.01, global_clipnorm=10.0),
             classification_loss=keras_cv.losses.FocalLoss(
                 from_logits=True, reduction="none"
             ),
             box_loss=keras_cv.losses.SmoothL1Loss(l1_cutoff=1.0, reduction="none"),
             metrics=[
                 keras_cv.metrics.COCOMeanAveragePrecision(
-                    class_ids=range(1),
+                    class_ids=range(2),
                     bounding_box_format=bounding_box_format,
                     name="MaP",
                 ),
                 keras_cv.metrics.COCORecall(
-                    class_ids=range(1),
+                    class_ids=range(2),
                     bounding_box_format=bounding_box_format,
                     name="Recall",
                 ),
@@ -321,7 +321,7 @@ def _create_bounding_box_dataset(bounding_box_format):
     # Just about the easiest dataset you can have, all classes are 0, all boxes are
     # exactly the same.  [1, 1, 2, 2] are the coordinates in xyxy
     xs = tf.ones((10, 512, 512, 3), dtype=tf.float32)
-    y_classes = tf.zeros((10, 10, 1), dtype=tf.float32)
+    y_classes = tf.ones((10, 10, 1), dtype=tf.float32)
 
     ys = tf.constant([0.25, 0.25, 0.1, 0.1], dtype=tf.float32)
     ys = tf.expand_dims(ys, axis=0)

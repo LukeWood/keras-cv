@@ -116,7 +116,7 @@ class NmsPredictionDecoder(tf.keras.layers.Layer):
         box_predictions = predictions[:, :, :4]
         cls_predictions = tf.nn.sigmoid(predictions[:, :, 4:])
 
-        classes = tf.math.argmax(cls_predictions, axis=-1)
+        classes = tf.math.argmax(cls_predictions, axis=-1) - 1
         classes = tf.cast(classes, box_predictions.dtype)
         confidence = tf.math.reduce_max(cls_predictions, axis=-1)
         classes = tf.expand_dims(classes, axis=-1)

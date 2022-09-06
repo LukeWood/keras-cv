@@ -168,7 +168,7 @@ class RetinaNet(ObjectDetectionBaseModel):
         prior_probability = tf.constant_initializer(-np.log((1 - 0.01) / 0.01))
 
         self.classification_head = classification_head or layers_lib.PredictionHead(
-            output_filters=9 * classes, bias_initializer=prior_probability
+            output_filters=9 * (classes + 1), bias_initializer=prior_probability
         )
         # self.classification_head.trainable = False
 
@@ -252,7 +252,7 @@ class RetinaNet(ObjectDetectionBaseModel):
             cls_outputs.append(
                 tf.reshape(
                     self.classification_head(feature, training=training),
-                    [N, -1, self.classes],
+                    [N, -1, self.classes + 1],
                 )
             )
 
@@ -334,9 +334,9 @@ class RetinaNet(ObjectDetectionBaseModel):
                 f"y_true.shape={tuple(y_true.shape)}"
             )
 
-        if y_pred.shape[-1] != self.classes + 4:
+        if y_pred.shape[-1] != self.classes + 4 + 1:
             raise ValueError(
-                "y_pred should have shape (None, None, classes + 4). "
+                "y_pred should have shape (None, None, classes + 4 + 1). "
                 f"Got y_pred.shape={tuple(y_pred.shape)}.  Does your model's `classes` "
                 "parameter match your losses `classes` parameter?"
             )
@@ -345,8 +345,8 @@ class RetinaNet(ObjectDetectionBaseModel):
         box_predictions = y_pred[:, :, :4]
 
         cls_labels = tf.one_hot(
-            tf.cast(y_true[:, :, 4], dtype=tf.int32),
-            depth=self.classes,
+            tf.cast(y_true[:, :, 4] + 1, dtype=tf.int32),
+            depth=self.classes + 1,
             dtype=tf.float32,
         )
         cls_predictions = y_pred[:, :, 4:]
