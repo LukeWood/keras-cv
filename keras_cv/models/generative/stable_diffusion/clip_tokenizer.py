@@ -104,6 +104,14 @@ class SimpleTokenizer:
             re.IGNORECASE,
         )
 
+    @property
+    def end_of_text(self):
+        return self.encoder["<|endoftext|>"]
+
+    @property
+    def start_of_text(self):
+        return self.encoder["<|startoftext|>"]
+
     def add_tokens(self, *args):
         self.vocab.extend([*args])
         for arg in args:
@@ -162,11 +170,7 @@ class SimpleTokenizer:
             bpe_tokens.extend(
                 self.encoder[bpe_token] for bpe_token in self.bpe(token).split(" ")
             )
-        return (
-            [self.encoder["<|startoftext|>"]]
-            + bpe_tokens
-            + [self.encoder["<|endoftext|>"]]
-        )
+        return [self.start_of_text] + bpe_tokens + [self.end_of_text]
 
     def decode(self, tokens):
         text = "".join([self.decoder[token] for token in tokens])
