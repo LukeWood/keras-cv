@@ -70,7 +70,8 @@ def whitespace_clean(text):
 
 
 class SimpleTokenizer:
-    def __init__(self, bpe_path: str = default_bpe()):
+    def __init__(self, bpe_path=None):
+        bpe_path = bpe_path or default_bpe()
         self.byte_encoder = bytes_to_unicode()
         self.byte_decoder = {v: k for k, v in self.byte_encoder.items()}
         merges = gzip.open(bpe_path).read().decode("utf-8").split("\n")
@@ -98,8 +99,8 @@ class SimpleTokenizer:
 
     def _create_pat(self):
         return re.compile(
-            "|".join([re.escape(key) for key in self.special_tokens.keys()]) +
-            r"""|'s|'t|'re|'ve|'m|'ll|'d|[\p{L}]+|[\p{N}]|[^\s\p{L}\p{N}]+""",
+            "|".join([re.escape(key) for key in self.special_tokens.keys()])
+            + r"""|'s|'t|'re|'ve|'m|'ll|'d|[\p{L}]+|[\p{N}]|[^\s\p{L}\p{N}]+""",
             re.IGNORECASE,
         )
 
@@ -161,7 +162,11 @@ class SimpleTokenizer:
             bpe_tokens.extend(
                 self.encoder[bpe_token] for bpe_token in self.bpe(token).split(" ")
             )
-        return [self.encoder["<|startoftext|>"]] + bpe_tokens + [self.encoder["<|endoftext|>"]]
+        return (
+            [self.encoder["<|startoftext|>"]]
+            + bpe_tokens
+            + [self.encoder["<|endoftext|>"]]
+        )
 
     def decode(self, tokens):
         text = "".join([self.decoder[token] for token in tokens])
