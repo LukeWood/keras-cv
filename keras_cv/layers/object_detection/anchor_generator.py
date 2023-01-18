@@ -75,6 +75,7 @@ class AnchorGenerator(keras.layers.Layer):
 
     def __init__(
         self,
+        *,
         bounding_box_format,
         sizes,
         scales,

@@ -38,6 +38,7 @@ class RandomAspectRatio(BaseImageAugmentationLayer):
     def __init__(
         self,
         factor,
+        *,
         interpolation="bilinear",
         bounding_box_format=None,
         seed=None,

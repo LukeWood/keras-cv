@@ -52,7 +52,7 @@ class StochasticDepth(tf.keras.layers.Layer):
     $$
     """
 
-    def __init__(self, rate=0.5, **kwargs):
+    def __init__(self, *, rate=0.5, **kwargs):
         super().__init__(**kwargs)
         self.rate = rate
         self.survival_probability = 1.0 - self.rate

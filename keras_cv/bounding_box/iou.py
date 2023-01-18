@@ -65,6 +65,7 @@ def _compute_intersection(boxes1, boxes2):
 def compute_iou(
     boxes1,
     boxes2,
+    *,
     bounding_box_format,
     use_masking=False,
     mask_val=-1,

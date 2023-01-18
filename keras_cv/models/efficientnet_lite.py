@@ -298,6 +298,7 @@ def EfficientNetLiteBlock(
 
 
 def EfficientNetLite(
+    *,
     include_rescaling,
     include_top,
     width_coefficient,
@@ -492,6 +493,7 @@ def EfficientNetLite(
 
 
 def EfficientNetLiteB0(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -521,6 +523,7 @@ def EfficientNetLiteB0(
 
 
 def EfficientNetLiteB1(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -550,6 +553,7 @@ def EfficientNetLiteB1(
 
 
 def EfficientNetLiteB2(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -579,6 +583,7 @@ def EfficientNetLiteB2(
 
 
 def EfficientNetLiteB3(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -608,6 +613,7 @@ def EfficientNetLiteB3(
 
 
 def EfficientNetLiteB4(
+    *,
     include_rescaling,
     include_top,
     classes=None,

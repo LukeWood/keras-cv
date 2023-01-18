@@ -21,7 +21,7 @@ from keras_cv.bounding_box_3d import CENTER_XYZ_DXDYDZ_PHI
 
 
 class WaymoEvaluationCallback(Callback):
-    def __init__(self, validation_data, config=None, **kwargs):
+    def __init__(self, validation_data, *, config=None, **kwargs):
         """Creates a callback to evaluate Waymo Open Dataset (WOD) metrics on a
         validation dataset.
 

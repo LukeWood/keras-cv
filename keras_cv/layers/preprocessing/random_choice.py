@@ -55,6 +55,7 @@ class RandomChoice(BaseImageAugmentationLayer):
     def __init__(
         self,
         layers,
+        *,
         auto_vectorize=False,
         seed=None,
         **kwargs,

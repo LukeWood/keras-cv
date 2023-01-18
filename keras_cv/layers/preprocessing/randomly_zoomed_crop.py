@@ -56,6 +56,7 @@ class RandomlyZoomedCrop(BaseImageAugmentationLayer):
         width,
         zoom_factor,
         aspect_ratio_factor,
+        *,
         interpolation="bilinear",
         seed=None,
         **kwargs,

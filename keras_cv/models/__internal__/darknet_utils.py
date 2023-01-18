@@ -244,6 +244,7 @@ class CrossStagePartial(layers.Layer):
         self,
         filters,
         num_bottlenecks,
+        *,
         residual=True,
         use_depthwise=False,
         activation="silu",

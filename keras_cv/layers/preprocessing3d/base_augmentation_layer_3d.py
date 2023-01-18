@@ -95,7 +95,7 @@ class BaseAugmentationLayer3D(tf.keras.__internal__.layers.BaseRandomLayer):
     `self._random_generator` attribute.
     """
 
-    def __init__(self, seed=None, **kwargs):
+    def __init__(self, *, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.auto_vectorize = False
 

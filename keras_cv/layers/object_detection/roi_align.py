@@ -336,7 +336,12 @@ class _ROIAligner(tf.keras.layers.Layer):
     """Performs ROIAlign for the second stage processing."""
 
     def __init__(
-        self, bounding_box_format, target_size=7, sample_offset: float = 0.5, **kwargs
+        self,
+        *,
+        bounding_box_format,
+        target_size=7,
+        sample_offset: float = 0.5,
+        **kwargs
     ):
         """
         Generates ROI Aligner.

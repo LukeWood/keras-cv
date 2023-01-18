@@ -91,6 +91,7 @@ class GridMask(BaseImageAugmentationLayer):
 
     def __init__(
         self,
+        *,
         ratio_factor=(0, 0.5),
         rotation_factor=0.15,
         fill_mode="constant",

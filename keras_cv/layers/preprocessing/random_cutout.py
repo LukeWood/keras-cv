@@ -65,6 +65,7 @@ class RandomCutout(BaseImageAugmentationLayer):
         self,
         height_factor,
         width_factor,
+        *,
         fill_mode="constant",
         fill_value=0.0,
         seed=None,

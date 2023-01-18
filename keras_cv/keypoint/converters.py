@@ -21,7 +21,7 @@ class _RequiresImagesException(Exception):
     pass
 
 
-def _rel_xy_to_xy(keypoints, images=None):
+def _rel_xy_to_xy(keypoints, *, images=None):
     if images is None:
         raise _RequiresImagesException()
     shape = tf.cast(tf.shape(images), keypoints.dtype)
@@ -32,7 +32,7 @@ def _rel_xy_to_xy(keypoints, images=None):
     return tf.concat([x * w, y * h, rest], axis=-1)
 
 
-def _xy_to_rel_xy(keypoints, images=None):
+def _xy_to_rel_xy(keypoints, *, images=None):
     if images is None:
         raise _RequiresImagesException()
     shape = tf.cast(tf.shape(images), keypoints.dtype)
@@ -43,7 +43,7 @@ def _xy_to_rel_xy(keypoints, images=None):
     return tf.concat([x / w, y / h, rest], axis=-1)
 
 
-def _xy_noop(keypoints, images=None):
+def _xy_noop(keypoints, *, images=None):
     return keypoints
 
 
@@ -58,7 +58,7 @@ FROM_XY_CONVERTERS = {
 }
 
 
-def convert_format(keypoints, source, target, images=None, dtype=None):
+def convert_format(keypoints, *, source, target, images=None, dtype=None):
     """Converts keypoints from one format to another.
 
     Supported formats are:

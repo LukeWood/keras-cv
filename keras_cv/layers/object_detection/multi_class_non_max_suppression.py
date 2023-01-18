@@ -40,6 +40,7 @@ class MultiClassNonMaxSuppression(tf.keras.layers.Layer):
 
     def __init__(
         self,
+        *,
         bounding_box_format,
         from_logits,
         iou_threshold=0.5,

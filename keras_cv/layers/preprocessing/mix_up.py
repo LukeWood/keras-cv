@@ -46,7 +46,7 @@ class MixUp(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, alpha=0.2, seed=None, **kwargs):
+    def __init__(self, *, alpha=0.2, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.alpha = alpha
         self.seed = seed

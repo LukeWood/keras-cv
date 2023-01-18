@@ -38,6 +38,7 @@ class AutoContrast(BaseImageAugmentationLayer):
 
     def __init__(
         self,
+        *,
         value_range,
         **kwargs,
     ):

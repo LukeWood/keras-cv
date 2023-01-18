@@ -136,6 +136,7 @@ class DropBlock2D(BaseRandomLayer):
         self,
         rate,
         block_size,
+        *,
         seed=None,
         **kwargs,
     ):

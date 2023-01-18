@@ -580,6 +580,7 @@ def round_repeats(repeats, depth_coefficient):
 
 
 def EfficientNetV2(
+    *,
     include_rescaling,
     include_top,
     width_coefficient,
@@ -823,6 +824,7 @@ def EfficientNetV2(
 
 
 def EfficientNetV2B0(
+    *,
     include_rescaling,
     include_top,
     weights=None,
@@ -851,6 +853,7 @@ def EfficientNetV2B0(
 
 
 def EfficientNetV2B1(
+    *,
     include_rescaling,
     include_top,
     weights=None,
@@ -879,6 +882,7 @@ def EfficientNetV2B1(
 
 
 def EfficientNetV2B2(
+    *,
     include_rescaling,
     include_top,
     weights=None,
@@ -907,6 +911,7 @@ def EfficientNetV2B2(
 
 
 def EfficientNetV2B3(
+    *,
     include_rescaling,
     include_top,
     weights=None,
@@ -935,6 +940,7 @@ def EfficientNetV2B3(
 
 
 def EfficientNetV2S(
+    *,
     include_rescaling,
     include_top,
     weights=None,
@@ -963,6 +969,7 @@ def EfficientNetV2S(
 
 
 def EfficientNetV2M(
+    *,
     include_rescaling,
     include_top,
     weights=None,
@@ -991,6 +998,7 @@ def EfficientNetV2M(
 
 
 def EfficientNetV2L(
+    *,
     include_rescaling,
     include_top,
     weights=None,

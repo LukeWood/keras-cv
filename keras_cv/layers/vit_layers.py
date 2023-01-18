@@ -52,7 +52,7 @@ class PatchingAndEmbedding(layers.Layer):
     ```
     """
 
-    def __init__(self, project_dim, patch_size, padding="VALID", **kwargs):
+    def __init__(self, project_dim, patch_size, *, padding="VALID", **kwargs):
         super().__init__(**kwargs)
         self.project_dim = project_dim
         self.patch_size = patch_size

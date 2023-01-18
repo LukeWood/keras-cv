@@ -45,7 +45,7 @@ class Equalization(BaseImageAugmentationLayer):
             of type float or int.  Should be in NHWC format.
     """
 
-    def __init__(self, value_range, bins=256, **kwargs):
+    def __init__(self, *, value_range, bins=256, **kwargs):
         super().__init__(**kwargs)
         self.bins = bins
         self.value_range = value_range

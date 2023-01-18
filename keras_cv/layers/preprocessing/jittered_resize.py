@@ -87,6 +87,7 @@ class JitteredResize(BaseImageAugmentationLayer):
 
     def __init__(
         self,
+        *,
         target_size,
         scale_factor,
         crop_size=None,

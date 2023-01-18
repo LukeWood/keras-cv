@@ -14,7 +14,7 @@
 import tensorflow as tf
 
 
-def pad_batch_to_shape(bounding_boxes, target_shape, padding_values=-1):
+def pad_batch_to_shape(bounding_boxes, target_shape, *, padding_values=-1):
     """Pads a list of bounding boxes with -1s.
 
     Boxes represented by all -1s are ignored by COCO metrics.

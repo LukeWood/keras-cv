@@ -43,14 +43,14 @@ class NormalFactorSampler(FactorSampler):
     ```
     """
 
-    def __init__(self, mean, stddev, min_value, max_value, seed=None):
+    def __init__(self, *, mean, stddev, min_value, max_value, seed=None):
         self.mean = mean
         self.stddev = stddev
         self.min_value = min_value
         self.max_value = max_value
         self.seed = seed
 
-    def __call__(self, shape=(), dtype="float32"):
+    def __call__(self, *, shape=(), dtype="float32"):
         return tf.clip_by_value(
             tf.random.normal(
                 shape=shape,

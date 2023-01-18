@@ -55,7 +55,7 @@ class RandomBrightness(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, factor, value_range=(0, 255), seed=None, **kwargs):
+    def __init__(self, factor, *, value_range=(0, 255), seed=None, **kwargs):
         super().__init__(seed=seed, force_generator=True, **kwargs)
         if isinstance(factor, float) or isinstance(factor, int):
             factor = (-factor, factor)

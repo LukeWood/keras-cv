@@ -55,6 +55,7 @@ def parse_imagenet_example(img_size, crop_to_aspect_ratio):
 def load(
     split,
     tfrecord_path,
+    *,
     batch_size=None,
     shuffle=True,
     shuffle_buffer=None,

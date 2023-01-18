@@ -43,7 +43,7 @@ class DropPath(tf.keras.__internal__.layers.BaseRandomLayer):
     ```
     """
 
-    def __init__(self, rate=0.5, seed=None, **kwargs):
+    def __init__(self, *, rate=0.5, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.rate = rate
         self.seed = seed

@@ -45,6 +45,7 @@ class RandomColorDegeneration(BaseImageAugmentationLayer):
     def __init__(
         self,
         factor,
+        *,
         seed=None,
         **kwargs,
     ):

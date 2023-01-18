@@ -30,10 +30,11 @@ ALL_AXES = [1, 1, 1, 1]
 
 
 def _encode_box_to_deltas(
-    anchors: tf.Tensor,
-    boxes: tf.Tensor,
-    anchor_format: str,
-    box_format: str,
+    anchors,
+    boxes,
+    *,
+    anchor_format,
+    box_format,
     variance: Optional[Union[List[float], tf.Tensor]] = None,
 ):
     """Converts bounding_boxes from `center_yxhw` to delta format."""
@@ -70,11 +71,12 @@ def _encode_box_to_deltas(
 
 
 def _decode_deltas_to_boxes(
-    anchors: tf.Tensor,
-    boxes_delta: tf.Tensor,
-    anchor_format: str,
-    box_format: str,
-    variance: Optional[Union[List[float], tf.Tensor]] = None,
+    anchors,
+    boxes_delta,
+    *,
+    anchor_format,
+    box_format,
+    variance=None,
 ):
     """Converts bounding_boxes from delta format to `center_yxhw`."""
     if variance is not None:
@@ -114,7 +116,7 @@ def _decode_deltas_to_boxes(
         return decode_single_level(anchors, boxes_delta)
 
 
-def _center_yxhw_to_xyxy(boxes, images=None, image_shape=None):
+def _center_yxhw_to_xyxy(boxes, *, images=None, image_shape=None):
     y, x, height, width = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat(
         [x - width / 2.0, y - height / 2.0, x + width / 2.0, y + height / 2.0],
@@ -122,7 +124,7 @@ def _center_yxhw_to_xyxy(boxes, images=None, image_shape=None):
     )
 
 
-def _center_xywh_to_xyxy(boxes, images=None, image_shape=None):
+def _center_xywh_to_xyxy(boxes, *, images=None, image_shape=None):
     x, y, width, height = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat(
         [x - width / 2.0, y - height / 2.0, x + width / 2.0, y + height / 2.0],
@@ -130,12 +132,12 @@ def _center_xywh_to_xyxy(boxes, images=None, image_shape=None):
     )
 
 
-def _xywh_to_xyxy(boxes, images=None, image_shape=None):
+def _xywh_to_xyxy(boxes, *, images=None, image_shape=None):
     x, y, width, height = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat([x, y, x + width, y + height], axis=-1)
 
 
-def _xyxy_to_center_yxhw(boxes, images=None, image_shape=None):
+def _xyxy_to_center_yxhw(boxes, *, images=None, image_shape=None):
     left, top, right, bottom = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat(
         [(top + bottom) / 2.0, (left + right) / 2.0, bottom - top, right - left],
@@ -143,7 +145,7 @@ def _xyxy_to_center_yxhw(boxes, images=None, image_shape=None):
     )
 
 
-def _rel_xywh_to_xyxy(boxes, images=None, image_shape=None):
+def _rel_xywh_to_xyxy(boxes, *, images=None, image_shape=None):
     image_height, image_width = _image_shape(images, image_shape, boxes)
     x, y, width, height = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat(
@@ -157,11 +159,11 @@ def _rel_xywh_to_xyxy(boxes, images=None, image_shape=None):
     )
 
 
-def _xyxy_no_op(boxes, images=None, image_shape=None):
+def _xyxy_no_op(boxes, *, images=None, image_shape=None):
     return boxes
 
 
-def _xyxy_to_xywh(boxes, images=None, image_shape=None):
+def _xyxy_to_xywh(boxes, *, images=None, image_shape=None):
     left, top, right, bottom = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat(
         [left, top, right - left, bottom - top],
@@ -169,7 +171,7 @@ def _xyxy_to_xywh(boxes, images=None, image_shape=None):
     )
 
 
-def _xyxy_to_rel_xywh(boxes, images=None, image_shape=None):
+def _xyxy_to_rel_xywh(boxes, *, images=None, image_shape=None):
     image_height, image_width = _image_shape(images, image_shape, boxes)
     left, top, right, bottom = tf.split(boxes, ALL_AXES, axis=-1)
     left, right = (
@@ -183,7 +185,7 @@ def _xyxy_to_rel_xywh(boxes, images=None, image_shape=None):
     )
 
 
-def _xyxy_to_center_xywh(boxes, images=None, image_shape=None):
+def _xyxy_to_center_xywh(boxes, *, images=None, image_shape=None):
     left, top, right, bottom = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat(
         [(left + right) / 2.0, (top + bottom) / 2.0, right - left, bottom - top],
@@ -191,7 +193,7 @@ def _xyxy_to_center_xywh(boxes, images=None, image_shape=None):
     )
 
 
-def _rel_xyxy_to_xyxy(boxes, images=None, image_shape=None):
+def _rel_xyxy_to_xyxy(boxes, *, images=None, image_shape=None):
     image_height, image_width = _image_shape(images, image_shape, boxes)
     left, top, right, bottom = tf.split(
         boxes,
@@ -206,7 +208,7 @@ def _rel_xyxy_to_xyxy(boxes, images=None, image_shape=None):
     )
 
 
-def _xyxy_to_rel_xyxy(boxes, images=None, image_shape=None):
+def _xyxy_to_rel_xyxy(boxes, *, images=None, image_shape=None):
     image_height, image_width = _image_shape(images, image_shape, boxes)
     left, top, right, bottom = tf.split(
         boxes,
@@ -221,12 +223,12 @@ def _xyxy_to_rel_xyxy(boxes, images=None, image_shape=None):
     )
 
 
-def _yxyx_to_xyxy(boxes, images=None, image_shape=None):
+def _yxyx_to_xyxy(boxes, *, images=None, image_shape=None):
     y1, x1, y2, x2 = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat([x1, y1, x2, y2], axis=-1)
 
 
-def _rel_yxyx_to_xyxy(boxes, images=None, image_shape=None):
+def _rel_yxyx_to_xyxy(boxes, *, images=None, image_shape=None):
     image_height, image_width = _image_shape(images, image_shape, boxes)
     top, left, bottom, right = tf.split(
         boxes,
@@ -241,12 +243,12 @@ def _rel_yxyx_to_xyxy(boxes, images=None, image_shape=None):
     )
 
 
-def _xyxy_to_yxyx(boxes, images=None, image_shape=None):
+def _xyxy_to_yxyx(boxes, *, images=None, image_shape=None):
     x1, y1, x2, y2 = tf.split(boxes, ALL_AXES, axis=-1)
     return tf.concat([y1, x1, y2, x2], axis=-1)
 
 
-def _xyxy_to_rel_yxyx(boxes, images=None, image_shape=None):
+def _xyxy_to_rel_yxyx(boxes, *, images=None, image_shape=None):
     image_height, image_width = _image_shape(images, image_shape, boxes)
     left, top, right, bottom = tf.split(boxes, ALL_AXES, axis=-1)
     left, right = left / image_width, right / image_width
@@ -281,7 +283,7 @@ FROM_XYXY_CONVERTERS = {
 
 
 def convert_format(
-    boxes, source, target, images=None, image_shape=None, dtype="float32"
+    boxes, *, source, target, images=None, image_shape=None, dtype="float32"
 ):
     f"""Converts bounding_boxes from one format to another.
 

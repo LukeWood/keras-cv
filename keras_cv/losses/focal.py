@@ -56,6 +56,7 @@ class FocalLoss(tf.keras.losses.Loss):
 
     def __init__(
         self,
+        *,
         alpha=0.25,
         gamma=2,
         from_logits=False,

@@ -56,7 +56,7 @@ class RandomChannelShift(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, value_range, factor, channels=3, seed=None, **kwargs):
+    def __init__(self, factor, *, value_range, channels=3, seed=None, **kwargs):
         super().__init__(**kwargs, seed=seed)
         self.seed = seed
         self.value_range = value_range

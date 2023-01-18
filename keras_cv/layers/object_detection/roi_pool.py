@@ -47,8 +47,9 @@ class ROIPooler(tf.keras.layers.Layer):
 
     def __init__(
         self,
+        *,
         bounding_box_format,
-        # TODO(consolidate size vs shape for KPL and here)
+        # TODO(tanzheny): consolidate size vs shape for KPL and here
         target_size,
         image_shape,
         **kwargs,

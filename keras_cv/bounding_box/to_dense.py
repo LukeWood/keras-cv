@@ -35,7 +35,7 @@ def _classes_shape(batched, classes_shape, max_boxes):
     return [max_boxes] + classes_shape[2:]
 
 
-def to_dense(bounding_boxes, max_boxes=None, default_value=-1):
+def to_dense(bounding_boxes, *, max_boxes=None, default_value=-1):
     """to_dense converts bounding boxes to Dense tensors
 
     Args:

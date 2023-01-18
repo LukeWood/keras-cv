@@ -47,7 +47,7 @@ class RandomHue(BaseImageAugmentationLayer):
 
     """
 
-    def __init__(self, factor, value_range, seed=None, **kwargs):
+    def __init__(self, factor, *, value_range, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.factor = preprocessing.parse_factor(
             factor,

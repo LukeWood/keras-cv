@@ -66,6 +66,7 @@ class AugMix(BaseImageAugmentationLayer):
 
     def __init__(
         self,
+        *,
         value_range,
         severity=0.3,
         num_chains=3,

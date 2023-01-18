@@ -58,6 +58,7 @@ class _ROISampler(tf.keras.layers.Layer):
 
     def __init__(
         self,
+        *,
         bounding_box_format: str,
         roi_matcher: box_matcher.ArgmaxBoxMatcher,
         positive_fraction: float = 0.25,

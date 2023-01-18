@@ -42,7 +42,7 @@ class FourierMix(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, alpha=0.5, decay_power=3, seed=None, **kwargs):
+    def __init__(self, *, alpha=0.5, decay_power=3, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.alpha = alpha
         self.decay_power = decay_power

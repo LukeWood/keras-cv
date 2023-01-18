@@ -266,6 +266,7 @@ def MLPMixer(
 
 
 def MLPMixerB16(
+    *,
     input_shape,
     include_rescaling,
     include_top,
@@ -297,6 +298,7 @@ def MLPMixerB16(
 
 
 def MLPMixerB32(
+    *,
     input_shape,
     include_rescaling,
     include_top,
@@ -327,6 +329,7 @@ def MLPMixerB32(
 
 
 def MLPMixerL16(
+    *,
     input_shape,
     include_rescaling,
     include_top,

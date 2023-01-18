@@ -75,6 +75,7 @@ class ROIGenerator(tf.keras.layers.Layer):
 
     def __init__(
         self,
+        *,
         bounding_box_format,
         pre_nms_topk_train: int = 2000,
         nms_score_threshold_train: float = 0.0,

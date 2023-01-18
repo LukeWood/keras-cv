@@ -50,6 +50,7 @@ class RandomSharpness(BaseImageAugmentationLayer):
     def __init__(
         self,
         factor,
+        *,
         value_range,
         seed=None,
         **kwargs,

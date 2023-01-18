@@ -46,6 +46,7 @@ class RetinaNetLabelEncoder(layers.Layer):
 
     def __init__(
         self,
+        *,
         bounding_box_format,
         anchor_generator,
         positive_threshold=0.5,

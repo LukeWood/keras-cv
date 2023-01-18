@@ -52,7 +52,7 @@ class RandomCrop(BaseImageAugmentationLayer):
       seed: Integer. Used to create a random seed.
     """
 
-    def __init__(self, height, width, seed=None, bounding_box_format=None, **kwargs):
+    def __init__(self, height, width, *, seed=None, bounding_box_format=None, **kwargs):
         super().__init__(**kwargs, autocast=False, seed=seed, force_generator=True)
         self.height = height
         self.width = width

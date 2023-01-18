@@ -57,7 +57,9 @@ class RandomFlip(BaseImageAugmentationLayer):
         for more details on supported bounding box formats.
     """
 
-    def __init__(self, mode=HORIZONTAL, seed=None, bounding_box_format=None, **kwargs):
+    def __init__(
+        self, *, mode=HORIZONTAL, seed=None, bounding_box_format=None, **kwargs
+    ):
         super().__init__(seed=seed, force_generator=True, **kwargs)
         self.mode = mode
         self.seed = seed

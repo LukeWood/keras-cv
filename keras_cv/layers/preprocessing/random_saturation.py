@@ -41,7 +41,7 @@ class RandomSaturation(BaseImageAugmentationLayer):
         seed: Integer. Used to create a random seed.
     """
 
-    def __init__(self, factor, seed=None, **kwargs):
+    def __init__(self, factor, *, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.factor = preprocessing.parse_factor(
             factor,

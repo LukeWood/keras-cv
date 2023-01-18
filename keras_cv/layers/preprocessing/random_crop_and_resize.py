@@ -63,6 +63,7 @@ class RandomCropAndResize(BaseImageAugmentationLayer):
         target_size,
         crop_area_factor,
         aspect_ratio_factor,
+        *,
         interpolation="bilinear",
         bounding_box_format=None,
         seed=None,

@@ -51,7 +51,7 @@ class ChannelShuffle(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, groups=3, seed=None, **kwargs):
+    def __init__(self, *, groups=3, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.groups = groups
         self.seed = seed

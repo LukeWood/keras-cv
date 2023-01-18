@@ -49,6 +49,7 @@ class BinaryPenaltyReducedFocalXent(tf.keras.losses.Loss):
 
     def __init__(
         self,
+        *,
         alpha=2.0,
         beta=4.0,
         from_logits=False,

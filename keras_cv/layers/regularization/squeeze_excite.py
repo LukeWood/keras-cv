@@ -58,6 +58,7 @@ class SqueezeAndExcite2D(layers.Layer):
     def __init__(
         self,
         filters,
+        *,
         ratio=0.25,
         squeeze_activation="relu",
         excite_activation="sigmoid",

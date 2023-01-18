@@ -36,12 +36,12 @@ class UniformFactorSampler(FactorSampler):
     ```
     """
 
-    def __init__(self, lower, upper, seed=None):
+    def __init__(self, lower, upper, *, seed=None):
         self.lower = lower
         self.upper = upper
         self.seed = seed
 
-    def __call__(self, shape=(), dtype="float32"):
+    def __call__(self, *, shape=(), dtype="float32"):
         return tf.random.uniform(
             shape, seed=self.seed, minval=self.lower, maxval=self.upper, dtype=dtype
         )

@@ -73,6 +73,7 @@ class RandomShear(BaseImageAugmentationLayer):
 
     def __init__(
         self,
+        *,
         x_factor=None,
         y_factor=None,
         interpolation="bilinear",

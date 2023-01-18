@@ -41,7 +41,7 @@ class RandomJpegQuality(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, factor, seed=None, **kwargs):
+    def __init__(self, factor, *, seed=None, **kwargs):
         super().__init__(**kwargs)
         if isinstance(factor, (float, int)):
             raise ValueError(

@@ -153,6 +153,7 @@ def ConvBlock(growth_rate, name=None):
 
 def DenseNet(
     blocks,
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -252,6 +253,7 @@ def DenseNet(
 
 
 def DenseNet121(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -277,6 +279,7 @@ def DenseNet121(
 
 
 def DenseNet169(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -302,6 +305,7 @@ def DenseNet169(
 
 
 def DenseNet201(
+    *,
     include_rescaling,
     include_top,
     classes=None,

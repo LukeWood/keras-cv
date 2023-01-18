@@ -69,6 +69,7 @@ BASE_DOCSTRING = """Instantiates the {name} architecture.
 
 def DarkNet(
     blocks,
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -209,6 +210,7 @@ def DarkNet(
 
 
 def DarkNet21(
+    *,
     include_rescaling,
     include_top,
     classes=None,
@@ -234,6 +236,7 @@ def DarkNet21(
 
 
 def DarkNet53(
+    *,
     include_rescaling,
     include_top,
     classes=None,

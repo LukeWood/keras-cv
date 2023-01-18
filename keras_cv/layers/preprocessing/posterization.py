@@ -58,7 +58,7 @@ class Posterization(BaseImageAugmentationLayer):
             2. A dict of tensors where the images are under `"images"` key.
     """
 
-    def __init__(self, value_range, bits, **kwargs):
+    def __init__(self, *, value_range, bits, **kwargs):
         super().__init__(**kwargs)
 
         if not len(value_range) == 2:

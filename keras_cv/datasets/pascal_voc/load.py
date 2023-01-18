@@ -53,6 +53,7 @@ def curry_map_function(bounding_box_format, img_size):
 
 def load(
     split,
+    *,
     bounding_box_format,
     batch_size=None,
     shuffle_files=True,

@@ -80,6 +80,7 @@ class FusedMBConvBlock(layers.Layer):
         self,
         input_filters: int,
         output_filters: int,
+        *,
         expand_ratio=1,
         kernel_size=3,
         strides=1,

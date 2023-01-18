@@ -69,6 +69,7 @@ class Resizing(BaseImageAugmentationLayer):
         self,
         height,
         width,
+        *,
         interpolation="bilinear",
         crop_to_aspect_ratio=False,
         pad_to_aspect_ratio=False,

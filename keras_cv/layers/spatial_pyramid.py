@@ -40,6 +40,7 @@ class SpatialPyramidPooling(tf.keras.layers.Layer):
     def __init__(
         self,
         dilation_rates: List[int],
+        *,
         num_channels: int = 256,
         activation: str = "relu",
         dropout: float = 0.0,

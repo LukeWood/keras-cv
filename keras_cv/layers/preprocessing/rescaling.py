@@ -54,7 +54,7 @@ class Rescaling(BaseImageAugmentationLayer):
       offset: Float, the offset to apply to the inputs.
     """
 
-    def __init__(self, scale, offset=0.0, **kwargs):
+    def __init__(self, scale, *, offset=0.0, **kwargs):
         super().__init__(**kwargs, autocast=False, force_generator=True)
         self.scale = scale
         self.offset = offset

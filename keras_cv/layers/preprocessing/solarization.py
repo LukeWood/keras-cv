@@ -71,6 +71,7 @@ class Solarization(BaseImageAugmentationLayer):
 
     def __init__(
         self,
+        *,
         value_range,
         addition_factor=0.0,
         threshold_factor=0.0,

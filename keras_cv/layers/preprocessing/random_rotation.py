@@ -87,6 +87,7 @@ class RandomRotation(BaseImageAugmentationLayer):
     def __init__(
         self,
         factor,
+        *,
         fill_mode="reflect",
         interpolation="bilinear",
         seed=None,

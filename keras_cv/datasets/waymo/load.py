@@ -33,6 +33,7 @@ def _generate_frames(segments, transformer):
 
 def load(
     tfrecord_path,
+    *,
     transformer=transformer.build_tensors_from_wod_frame,
     output_signature=transformer.WOD_FRAME_OUTPUT_SIGNATURE,
 ):

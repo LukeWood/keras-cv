@@ -16,7 +16,7 @@ import tensorflow as tf
 import keras_cv.bounding_box.validate_format as validate_format
 
 
-def to_ragged(bounding_boxes, sentinel=-1, dtype=tf.float32):
+def to_ragged(bounding_boxes, *, sentinel=-1, dtype=tf.float32):
     """converts a Dense padded bounding box `tf.Tensor` to a `tf.RaggedTensor`.
 
     Bounding boxes are ragged tensors in most use cases. Converting them to a dense

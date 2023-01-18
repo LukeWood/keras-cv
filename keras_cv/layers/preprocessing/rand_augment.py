@@ -77,6 +77,7 @@ class RandAugment(RandomAugmentationPipeline):
 
     def __init__(
         self,
+        *,
         value_range,
         augmentations_per_image=3,
         magnitude=0.5,

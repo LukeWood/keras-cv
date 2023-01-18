@@ -17,7 +17,7 @@ from keras_cv.bounding_box.to_ragged import to_ragged
 from keras_cv.bounding_box.validate_format import validate_format
 
 
-def mask_invalid_detections(bounding_boxes, output_ragged=False):
+def mask_invalid_detections(bounding_boxes, *, output_ragged=False):
     """masks out invalid detections with -1s.
 
     This utility is mainly used on the output of `tf.image.combined_non_max_suppression`

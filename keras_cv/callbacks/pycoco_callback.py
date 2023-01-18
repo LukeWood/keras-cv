@@ -19,7 +19,7 @@ from keras_cv.metrics.coco import compute_pycoco_metrics
 
 
 class PyCOCOCallback(Callback):
-    def __init__(self, validation_data, bounding_box_format, cache=True, **kwargs):
+    def __init__(self, validation_data, *, bounding_box_format, cache=True, **kwargs):
         """Creates a callback to evaluate PyCOCO metrics on a validation dataset.
 
         Args:

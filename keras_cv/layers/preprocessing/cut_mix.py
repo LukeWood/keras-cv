@@ -43,7 +43,7 @@ class CutMix(BaseImageAugmentationLayer):
     ```
     """
 
-    def __init__(self, alpha=1.0, seed=None, **kwargs):
+    def __init__(self, *, alpha=1.0, seed=None, **kwargs):
         super().__init__(seed=seed, **kwargs)
         self.alpha = alpha
         self.seed = seed

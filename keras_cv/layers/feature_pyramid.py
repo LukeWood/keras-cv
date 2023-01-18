@@ -87,6 +87,7 @@ class FeaturePyramid(tf.keras.layers.Layer):
         self,
         min_level,
         max_level,
+        *,
         num_channels=256,
         lateral_layers=None,
         output_layers=None,

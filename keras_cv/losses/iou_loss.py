@@ -57,7 +57,7 @@ class IoULoss(tf.keras.losses.Loss):
     ```
     """
 
-    def __init__(self, bounding_box_format, mode="log", axis=-1, **kwargs):
+    def __init__(self, *, bounding_box_format, mode="log", axis=-1, **kwargs):
         super().__init__(**kwargs)
         self.bounding_box_format = bounding_box_format
         self.mode = mode

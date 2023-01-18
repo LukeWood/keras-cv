@@ -52,7 +52,7 @@ class GIoULoss(tf.keras.losses.Loss):
     ```
     """
 
-    def __init__(self, bounding_box_format, axis=-1, **kwargs):
+    def __init__(self, *, bounding_box_format, axis=-1, **kwargs):
         super().__init__(**kwargs)
         self.bounding_box_format = bounding_box_format
         self.axis = axis

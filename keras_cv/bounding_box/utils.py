@@ -19,7 +19,7 @@ from keras_cv import bounding_box
 from keras_cv.bounding_box.formats import XYWH
 
 
-def is_relative(bounding_box_format):
+def is_relative(*, bounding_box_format):
     """A util to check if a bounding box format uses relative coordinates"""
     if bounding_box_format.lower() not in bounding_box.converters.TO_XYXY_CONVERTERS:
         raise ValueError(
@@ -32,7 +32,7 @@ def is_relative(bounding_box_format):
     return bounding_box_format.startswith("rel")
 
 
-def as_relative(bounding_box_format):
+def as_relative(*, bounding_box_format):
     """A util to get the relative equivalent of a provided bounding box format.
 
     If the specified format is already a relative format,
@@ -45,7 +45,7 @@ def as_relative(bounding_box_format):
     return bounding_box_format
 
 
-def _relative_area(boxes, bounding_box_format):
+def _relative_area(boxes, *, bounding_box_format):
     boxes = bounding_box.convert_format(
         boxes,
         source=bounding_box_format,
@@ -59,7 +59,9 @@ def _relative_area(boxes, bounding_box_format):
 
 # bounding_boxes is a dictionary with shape:
 # {"boxes": [None, None, 4], "mask": [None, None]}
-def clip_to_image(bounding_boxes, bounding_box_format, images=None, image_shape=None):
+def clip_to_image(
+    bounding_boxes, *, bounding_box_format, images=None, image_shape=None
+):
     """clips bounding boxes to image boundaries.
 
     `clip_to_image()` clips bounding boxes that have coordinates out of bounds of an
