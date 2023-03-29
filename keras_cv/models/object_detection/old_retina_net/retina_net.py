@@ -22,6 +22,7 @@ from keras_cv import layers as cv_layers
 from keras_cv.bounding_box.converters import _decode_deltas_to_boxes
 from keras_cv.models.object_detection import predict_utils
 from keras_cv.models.object_detection.__internal__ import unpack_input
+from keras_cv.models.object_detection.retina_net import RetinaNetLabelEncoder
 from keras_cv.models.object_detection.retina_net.__internal__ import (
     layers as layers_lib,
 )
@@ -29,11 +30,7 @@ from keras_cv.models.object_detection.retina_net.__internal__ import (
 BOX_VARIANCE = [0.1, 0.1, 0.2, 0.2]
 
 
-# TODO(lukewood): update docstring to include documentation on creating a custom label
-# decoder/etc.
-# TODO(lukewood): link to keras.io guide on creating custom backbone and FPN.
-@keras.utils.register_keras_serializable(package="keras_cv")
-class RetinaNet(tf.keras.Model):
+class OldRetinaNet(tf.keras.Model):
     """A Keras model implementing the RetinaNet architecture.
 
     Implements the RetinaNet architecture for object detection.  The constructor
@@ -120,9 +117,9 @@ class RetinaNet(tf.keras.Model):
             )
         anchor_generator = (
             anchor_generator
-            or RetinaNet.default_anchor_generator(bounding_box_format)
+            or OldRetinaNet.default_anchor_generator(bounding_box_format)
         )
-        label_encoder = label_encoder or cv_layers.RetinaNetLabelEncoder(
+        label_encoder = label_encoder or RetinaNetLabelEncoder(
             bounding_box_format=bounding_box_format,
             anchor_generator=anchor_generator,
             box_variance=BOX_VARIANCE,
@@ -145,8 +142,8 @@ class RetinaNet(tf.keras.Model):
         self.classes = classes
         self.backbone = (
             backbone
-            or keras_cv.models.object_detection.old_retina_net.resnet_v2.ResNet50V2(
-                include_top=False, include_rescaling=True
+            or keras_cv.models.object_detection.old_retina_net.ResNet50V2(
+                include_top=False, include_rescaling=True, weights='imagenet'
             ).as_backbone()
         )
 
@@ -200,7 +197,8 @@ class RetinaNet(tf.keras.Model):
             clip_boxes=True,
         )
 
-    def _forward(self, images, training=None):
+
+    def call(self, images, training=None):
         backbone_outputs = self.backbone(images, training=training)
         features = self.feature_pyramid(backbone_outputs, training=training)
 
@@ -222,22 +220,6 @@ class RetinaNet(tf.keras.Model):
 
         cls_pred = tf.concat(cls_pred, axis=1)
         box_pred = tf.concat(box_pred, axis=1)
-
-        return box_pred, cls_pred
-
-    def call(self, images, training=None):
-        box_pred, cls_pred = self._forward(images, training=training)
-        if not training:
-            # box_pred is on "center_yxhw" format, convert to target format.
-            anchors = self.anchor_generator(images[0])
-            anchors = tf.concat(tf.nest.flatten(anchors), axis=0)
-            box_pred = _decode_deltas_to_boxes(
-                anchors=anchors,
-                boxes_delta=box_pred,
-                anchor_format=self.anchor_generator.bounding_box_format,
-                box_format=self.bounding_box_format,
-                variance=BOX_VARIANCE,
-            )
         return box_pred, cls_pred
 
     def decode_predictions(self, predictions, images):
