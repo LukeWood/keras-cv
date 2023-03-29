@@ -20,14 +20,12 @@ Reference:
         https://arxiv.org/abs/1905.11946) (ICML 2019)
     - [Based on the original EfficientNet Lite's](https://github.com/tensorflow/tpu/tree/master/models/official/efficientnet/lite)
 """
-
 import copy
 import math
 
 import tensorflow as tf
 from keras import backend
 from keras import layers
-from tensorflow import keras
 
 from keras_cv.models import utils
 from keras_cv.models.weights import parse_weights
@@ -295,8 +293,8 @@ def apply_efficient_net_lite_block(
     return x
 
 
-@keras.utils.register_keras_serializable(package="keras_cv.models")
-class EfficientNetLite(keras.Model):
+@tf.keras.utils.register_keras_serializable(package="keras_cv.models")
+class EfficientNetLite(tf.keras.Model):
     """Instantiates the EfficientNetLite architecture using given scaling coefficients.
 
     Args:

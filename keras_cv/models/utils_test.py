@@ -15,7 +15,6 @@
 
 import tensorflow as tf
 from keras import layers
-from tensorflow import keras
 
 from keras_cv.models import utils
 
@@ -33,7 +32,7 @@ class ModelUtilTestCase(tf.test.TestCase):
         )
 
     def test_as_backbone_missing_backbone_level_outputs(self):
-        model = keras.models.Sequential()
+        model = tf.keras.models.Sequential()
         model.add(layers.Conv2D(64, kernel_size=3, input_shape=(16, 16, 3)))
         model.add(
             layers.Conv2D(
@@ -61,7 +60,7 @@ class ModelUtilTestCase(tf.test.TestCase):
         out = layers.Dense(10)(x)
         _backbone_level_outputs[4] = out
 
-        model = keras.models.Model(inputs=inp, outputs=out)
+        model = tf.keras.models.Model(inputs=inp, outputs=out)
 
         # when model has _backbone_level_outputs, it should not raise an error
         model._backbone_level_outputs = _backbone_level_outputs

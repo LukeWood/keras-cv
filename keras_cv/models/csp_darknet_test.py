@@ -14,7 +14,6 @@
 
 import tensorflow as tf
 from absl.testing import parameterized
-from tensorflow import keras
 
 from keras_cv.models import csp_darknet
 
@@ -30,8 +29,8 @@ MODEL_LIST = [
 class CSPDarkNetTest(ModelsTest, tf.test.TestCase, parameterized.TestCase):
     @parameterized.parameters(*MODEL_LIST)
     def test_application_base(self, app, _, args):
-        if hasattr(keras.__internal__, "enable_unsafe_deserialization"):
-            keras.__internal__.enable_unsafe_deserialization()
+        if hasattr(tf.keras.__internal__, "enable_unsafe_deserialization"):
+            tf.keras.__internal__.enable_unsafe_deserialization()
         super()._test_application_base(app, _, args)
 
     @parameterized.parameters(*MODEL_LIST)

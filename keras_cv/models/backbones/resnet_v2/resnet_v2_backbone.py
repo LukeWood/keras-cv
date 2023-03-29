@@ -57,7 +57,6 @@ def apply_basic_block(
             Defaults to 1.
         conv_shortcut: bool, uses convolution shortcut if `True`. If `False`
             (default), uses identity or pooling shortcut, based on stride.
-        name: string, optional prefix for the layer names used in the block.
 
     Returns:
       Output tensor for the residual block.
@@ -135,7 +134,6 @@ def apply_block(
             Defaults to 1.
         conv_shortcut: bool, uses convolution shortcut if `True`. If `False`
             (default), uses identity or pooling shortcut, based on stride.
-        name: string, optional prefix for the layer names used in the block.
 
     Returns:
       Output tensor for the residual block.
@@ -214,7 +212,6 @@ def apply_stack(
         stride: int, stride of the first layer in the first block. Defaults to 2.
         dilation: int, the dilation rate to use for dilated convolution.
             Defaults to 1.
-        name: string, optional prefix for the layer names used in the block.
         block_type: string, one of "basic_block" or "block". The block type to
             stack. Use "basic_block" for ResNet18 and ResNet34.
         first_shortcut: bool. Use convolution shortcut if `True` (default),
@@ -438,7 +435,7 @@ ALIAS_DOCSTRING = """ResNetV2Backbone model with {num_layers} layers.
 
 class ResNet18V2Backbone(ResNetV2Backbone):
     def __new__(
-        cls,
+        self,
         include_rescaling=True,
         input_shape=(None, None, 3),
         input_tensor=None,
@@ -467,7 +464,7 @@ class ResNet18V2Backbone(ResNetV2Backbone):
 
 class ResNet34V2Backbone(ResNetV2Backbone):
     def __new__(
-        cls,
+        self,
         include_rescaling=True,
         input_shape=(None, None, 3),
         input_tensor=None,
@@ -496,7 +493,7 @@ class ResNet34V2Backbone(ResNetV2Backbone):
 
 class ResNet50V2Backbone(ResNetV2Backbone):
     def __new__(
-        cls,
+        self,
         include_rescaling=True,
         input_shape=(None, None, 3),
         input_tensor=None,
@@ -529,7 +526,7 @@ class ResNet50V2Backbone(ResNetV2Backbone):
 
 class ResNet101V2Backbone(ResNetV2Backbone):
     def __new__(
-        cls,
+        self,
         include_rescaling=True,
         input_shape=(None, None, 3),
         input_tensor=None,
@@ -558,7 +555,7 @@ class ResNet101V2Backbone(ResNetV2Backbone):
 
 class ResNet152V2Backbone(ResNetV2Backbone):
     def __new__(
-        cls,
+        self,
         include_rescaling=True,
         input_shape=(None, None, 3),
         input_tensor=None,

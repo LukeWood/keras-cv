@@ -17,7 +17,6 @@ import os
 import pytest
 import tensorflow as tf
 from absl.testing import parameterized
-from tensorflow import keras
 from tensorflow.keras import optimizers
 
 import keras_cv
@@ -73,7 +72,7 @@ class FasterRCNNTest(tf.test.TestCase, parameterized.TestCase):
             model.compile(rpn_box_loss="binary_crossentropy")
         with self.assertRaisesRegex(ValueError, "only accepts"):
             model.compile(
-                rpn_classification_loss=keras.losses.BinaryCrossentropy(
+                rpn_classification_loss=tf.keras.losses.BinaryCrossentropy(
                     from_logits=False
                 )
             )

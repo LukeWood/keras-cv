@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import tensorflow as tf
-from tensorflow import keras
 
 from keras_cv.layers.object_detection_3d.voxelization import DynamicVoxelization
 from keras_cv.models.__internal__.unet import Block
@@ -34,33 +33,33 @@ up_block_configs = [512, 256, 256]
 
 class CenterPillarTest(tf.test.TestCase):
     def get_point_net(self):
-        return keras.Sequential(
+        return tf.keras.Sequential(
             [
-                keras.layers.Dense(10),
-                keras.layers.Dense(20),
+                tf.keras.layers.Dense(10),
+                tf.keras.layers.Dense(20),
             ]
         )
 
     def build_centerpillar_unet(self, input_shape):
-        input = keras.layers.Input(shape=input_shape)
-        x = keras.layers.Conv2D(
+        input = tf.keras.layers.Input(shape=input_shape)
+        x = tf.keras.layers.Conv2D(
             128,
             1,
             1,
             padding="same",
-            kernel_initializer=keras.initializers.VarianceScaling(),
-            kernel_regularizer=keras.regularizers.L2(l2=1e-4),
+            kernel_initializer=tf.keras.initializers.VarianceScaling(),
+            kernel_regularizer=tf.keras.regularizers.L2(l2=1e-4),
         )(input)
-        x = keras.layers.BatchNormalization(
-            beta_regularizer=keras.regularizers.L2(l2=1e-8),
-            gamma_regularizer=keras.regularizers.L2(l2=1e-8),
+        x = tf.keras.layers.BatchNormalization(
+            beta_regularizer=tf.keras.regularizers.L2(l2=1e-8),
+            gamma_regularizer=tf.keras.regularizers.L2(l2=1e-8),
         )(x)
-        x = keras.layers.ReLU()(x)
+        x = tf.keras.layers.ReLU()(x)
         x = Block(128, downsample=False, sync_bn=False)(x)
         output = UNet(
             x.shape[1:], down_block_configs, up_block_configs, sync_bn=False
         )(x)
-        return keras.Model(input, output)
+        return tf.keras.Model(input, output)
 
     def test_center_pillar_call(self):
         voxel_net = DynamicVoxelization(
@@ -71,7 +70,7 @@ class CenterPillarTest(tf.test.TestCase):
         # dimensions computed from voxel_net
         unet = self.build_centerpillar_unet([400, 400, 20])
         decoder = MultiClassHeatmapDecoder(
-            num_classes=2,
+            num_class=2,
             num_head_bin=[2, 2],
             anchor_size=[[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]],
             max_pool_size=[3, 3],
@@ -81,7 +80,7 @@ class CenterPillarTest(tf.test.TestCase):
             spatial_size=voxel_net._spatial_size,
         )
         multiclass_head = MultiClassDetectionHead(
-            num_classes=2,
+            num_class=2,
             num_head_bin=[2, 2],
         )
         model = MultiHeadCenterPillar(
@@ -114,7 +113,7 @@ class CenterPillarTest(tf.test.TestCase):
         # dimensions computed from voxel_net
         unet = self.build_centerpillar_unet([400, 400, 20])
         decoder = MultiClassHeatmapDecoder(
-            num_classes=2,
+            num_class=2,
             num_head_bin=[2, 2],
             anchor_size=[[1.0, 1.0, 1.0], [1.0, 1.0, 1.0]],
             max_pool_size=[3, 3],
@@ -124,7 +123,7 @@ class CenterPillarTest(tf.test.TestCase):
             spatial_size=voxel_net._spatial_size,
         )
         multiclass_head = MultiClassDetectionHead(
-            num_classes=2,
+            num_class=2,
             num_head_bin=[2, 2],
         )
         model = MultiHeadCenterPillar(
@@ -146,10 +145,9 @@ class CenterPillarTest(tf.test.TestCase):
             training=False,
         )
         # max number boxes is 3
-        self.assertEqual(outputs["3d_boxes"]["boxes"].shape, [2, 7, 7])
-        self.assertEqual(outputs["3d_boxes"]["classes"].shape, [2, 7])
-        self.assertEqual(outputs["3d_boxes"]["confidence"].shape, [2, 7])
-        self.assertAllEqual(
-            outputs["3d_boxes"]["classes"],
-            tf.constant([1, 1, 1, 2, 2, 2, 2] * 2, shape=(2, 7)),
-        )
+        self.assertEqual(outputs["class_1"][0].shape, [2, 3, 7])
+        self.assertEqual(outputs["class_1"][1].shape, [2, 3])
+        self.assertEqual(outputs["class_1"][2].shape, [2, 3])
+        self.assertEqual(outputs["class_2"][0].shape, [2, 4, 7])
+        self.assertEqual(outputs["class_2"][1].shape, [2, 4])
+        self.assertEqual(outputs["class_2"][2].shape, [2, 4])
