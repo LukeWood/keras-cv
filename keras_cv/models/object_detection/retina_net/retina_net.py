@@ -21,7 +21,6 @@ from tensorflow import keras
 import keras_cv
 from keras_cv import bounding_box
 from keras_cv import layers as cv_layers
-from keras_cv.bounding_box.converters import _decode_deltas_to_boxes
 from keras_cv.models.backbones.backbone_presets import backbone_presets
 from keras_cv.models.backbones.backbone_presets import (
     backbone_presets_with_weights,
@@ -298,7 +297,7 @@ class RetinaNet(Task):
         anchors = self.anchor_generator(images[0])
         anchors = tf.concat(tf.nest.flatten(anchors), axis=0)
 
-        box_pred = _decode_deltas_to_boxes(
+        box_pred = bounding_box.decode_deltas_to_boxes(
             anchors=anchors,
             boxes_delta=box_pred,
             anchor_format=self.anchor_generator.bounding_box_format,

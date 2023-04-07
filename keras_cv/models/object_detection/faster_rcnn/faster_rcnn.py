@@ -19,7 +19,7 @@ from tensorflow import keras
 import keras_cv
 from keras_cv import bounding_box
 from keras_cv import layers as cv_layers
-from keras_cv.bounding_box.converters import _decode_deltas_to_boxes
+from keras_cv.bounding_box.converters import decode_deltas_to_boxes
 from keras_cv.bounding_box.utils import _clip_boxes
 from keras_cv.layers.object_detection.anchor_generator import AnchorGenerator
 from keras_cv.layers.object_detection.box_matcher import BoxMatcher
@@ -350,7 +350,7 @@ class FasterRCNN(keras.Model):
         # [BS, num_anchors, 4], [BS, num_anchors, 1]
         rpn_boxes, rpn_scores = self.rpn_head(feature_map, training=training)
         # the decoded format is center_xywh, convert to yxyx
-        decoded_rpn_boxes = _decode_deltas_to_boxes(
+        decoded_rpn_boxes = bounding_box.decode_deltas_to_boxes(
             anchors=anchors,
             boxes_delta=rpn_boxes,
             anchor_format="yxyx",
@@ -388,7 +388,7 @@ class FasterRCNN(keras.Model):
         )
         if not training:
             # box_pred is on "center_yxhw" format, convert to target format.
-            box_pred = _decode_deltas_to_boxes(
+            box_pred = bounding_box.decode_deltas_to_boxes(
                 anchors=rois,
                 boxes_delta=box_pred,
                 anchor_format="yxyx",

@@ -119,7 +119,7 @@ class RetinaNetLabelEncoder(layers.Layer):
         matched_gt_boxes = target_gather._target_gather(
             gt_boxes, matched_gt_idx
         )
-        box_target = bounding_box._encode_box_to_deltas(
+        box_target = bounding_box.encode_box_to_deltas(
             anchors=anchor_boxes,
             boxes=matched_gt_boxes,
             anchor_format=self.bounding_box_format,

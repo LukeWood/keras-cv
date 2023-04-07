@@ -153,7 +153,7 @@ class _ROISampler(keras.layers.Layer):
         matched_gt_boxes = target_gather._target_gather(
             gt_boxes, matched_gt_cols
         )
-        encoded_matched_gt_boxes = bounding_box._encode_box_to_deltas(
+        encoded_matched_gt_boxes = bounding_box.encode_box_to_deltas(
             anchors=rois,
             boxes=matched_gt_boxes,
             anchor_format="yxyx",

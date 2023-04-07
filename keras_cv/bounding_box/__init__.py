@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from keras_cv.bounding_box.converters import _decode_deltas_to_boxes
-from keras_cv.bounding_box.converters import _encode_box_to_deltas
 from keras_cv.bounding_box.converters import convert_format
+from keras_cv.bounding_box.delta_encoding import decode_deltas_to_boxes
+from keras_cv.bounding_box.delta_encoding import encode_box_to_deltas
 from keras_cv.bounding_box.ensure_tensor import ensure_tensor
 from keras_cv.bounding_box.formats import CENTER_XYWH
 from keras_cv.bounding_box.formats import REL_XYXY
